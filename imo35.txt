@@ -1,0 +1,424 @@
+🧠 IMO LEVEL 2 (Class 7) – Advanced Question Set
+
+Total Questions: 35 | Difficulty: High (Real Olympiad Level)
+
+⸻
+
+🔢 SECTION 1: Numbers & Algebra (Multi-step)
+
+Q1. Evaluate:
+84 ÷ [7 × (3 + 1)] + 6² = ?
+A) 42
+B) 39
+C) 45
+D) 48
+✅ Ans: B) 39
+
+⸻
+
+Q2. A number increased by 25% becomes 125. Find the number.
+A) 100
+B) 90
+C) 110
+D) 95
+✅ Ans: A) 100
+
+⸻
+
+Q3. Find the value:
+2³ × 5 + 4² × 3 = ?
+A) 88
+B) 92
+C) 96
+D) 100
+✅ Ans: A) 88
+
+⸻
+
+Q4. Difference between squares of 18 and 16 is:
+A) 68
+B) 72
+C) 64
+D) 70
+✅ Ans: A) 68
+
+⸻
+
+Q5. Find the least number divisible by 4, 5, and 6.
+A) 30
+B) 60
+C) 120
+D) 90
+✅ Ans: B) 60
+
+⸻
+
+🧠 SECTION 2: Logical Reasoning (Advanced Patterns)
+
+Q6.
+If 6 + 2 = 40 and 7 + 3 = 58, then 8 + 4 = ?
+
+A) 80
+B) 68
+C) 72
+D) 64
+
+👉 Pattern: a² + b²
+👉 8² + 4² = 64 + 16 = 80
+
+✅ Ans: A) 80
+
+⸻
+
+Q7. Find the odd one out:
+A) 81
+B) 121
+C) 169
+D) 200
+✅ Ans: D) 200
+
+⸻
+
+Q8. If A=1, B=2… find value of “ALGEBRA”
+A) 46
+B) 50
+C) 51
+D) 52
+✅ Ans: A) 46
+
+⸻
+
+Q9. Mirror image of 9:10 is:
+A) 2:50
+B) 3:50
+C) 2:40
+D) 3:40
+✅ Ans: A) 2:50
+
+⸻
+
+Q10. If today is Tuesday, what day after 500 days?
+A) Thursday
+B) Friday
+C) Saturday
+D) Sunday
+✅ Ans: B) Friday
+
+⸻
+
+📐 SECTION 3: Geometry & Mensuration
+
+Q11. Perimeter of rectangle (l=25 cm, b=15 cm):
+A) 70
+B) 80
+C) 90
+D) 100
+✅ Ans: B) 80
+
+⸻
+
+Q12. Area of triangle (base=12 cm, height=10 cm):
+A) 60
+B) 120
+C) 100
+D) 80
+✅ Ans: A) 60
+
+⸻
+
+Q13. Sum of interior angles of quadrilateral:
+A) 180°
+B) 270°
+C) 360°
+D) 540°
+✅ Ans: C) 360°
+
+⸻
+
+Q14. A square has side 15 cm. Area = ?
+A) 200
+B) 225
+C) 250
+D) 275
+✅ Ans: B) 225
+
+⸻
+
+🧮 SECTION 4: Word Problems (Tricky Multi-step)
+
+Q15. A train travels 80 km/hr. How far in 1 hour 45 minutes?
+A) 120 km
+B) 140 km
+C) 160 km
+D) 150 km
+✅ Ans: B) 140 km
+
+⸻
+
+Q16. A shopkeeper gives 15% discount on ₹400. Final price?
+A) 340
+B) 350
+C) 360
+D) 320
+✅ Ans: A) 340
+
+⸻
+
+Q17. A number decreased by 20% becomes 80. Find original.
+A) 90
+B) 100
+C) 110
+D) 120
+✅ Ans: B) 100
+
+⸻
+
+Q18. The ratio of boys to girls is 4 : 3.
+If 7 more girls join, the ratio becomes 4 : 4.
+Find the original number of girls.
+
+A) 21
+B) 24
+C) 28
+D) 14
+
+👉 Girls = 3x
+New ratio → 4x : (3x + 7) = 1 : 1
+So, 4x = 3x + 7 → x = 7
+Girls = 3x = 21
+
+✅ Ans: A) 21
+
+
+⸻
+
+🔥 Q19
+
+2, 6, 7, 21, 22, 66, ?
+Find: next term + previous term
+
+A) 133
+B) 132
+C) 140
+D) 120
+
+👉 Next = 67
+👉 Previous = 66
+
+👉 67 + 66 = 133
+
+✅ Ans: A) 133
+
+⸻
+
+🔥 Q20 
+
+3, 9, 27, 81, ?
+Find: (next term ÷ 3) + 5
+
+A) 90
+B) 86
+C) 88
+D) 92
+
+👉 Next = 243
+👉 243 ÷ 3 = 81
+👉 81 + 5 = 86
+
+✅ Ans: B) 86
+
+⸻
+
+🔥 Q21 
+
+1, 4, 9, 16, 25, ?
+Find: difference between next term and previous
+
+A) 11
+B) 10
+C) 9
+D) 12
+
+👉 Next = 36
+👉 Previous = 25
+
+👉 36 – 25 = 11
+
+✅ Ans: A) 11
+
+
+⸻
+
+🧠 SECTION 6: Higher Thinking (Concept-Based)
+
+Q22. If 12 workers take 8 days, how many days for 6 workers?
+A) 4
+B) 8
+C) 16
+D) 12
+✅ Ans: C) 16
+
+⸻
+
+Q23. A clock loses 3 minutes per hour. Loss in 8 hours?
+A) 20
+B) 24
+C) 30
+D) 18
+✅ Ans: B) 24
+
+⸻
+
+Q24. Find a number leaving remainder 2 when divided by 5.
+A) 17
+B) 15
+C) 20
+D) 25
+✅ Ans: A) 17
+
+⸻
+
+Q25. 17² = ?
+A) 289
+B) 279
+C) 269
+D) 259
+✅ Ans: A) 289
+
+⸻
+
+🔥 SECTION 7: Advanced Olympiad Traps
+
+Q26. Which is largest?
+A) 0.8
+B) 4/5
+C) 0.78
+D) Both A and B
+✅ Ans: D
+
+⸻
+
+Q27.Find the smallest number divisible by 3, 5, and 8.
+
+A) 60
+B) 120
+C) 240
+D) 180
+✅ Ans: B) 120
+
+⸻
+
+Q28. 36, 49, 64, ?, 100
+A) 72
+B) 81
+C) 90
+D) 85
+✅ Ans: B) 81
+
+⸻
+
+Q29. Number of factors of 24?
+A) 6
+B) 8
+C) 7
+D) 9
+✅ Ans: B) 8
+🔥 Q30 
+
+0 × 1000 + 250 × 2 – 100 = ?
+
+A) 300
+B) 400
+C) 350
+D) 250
+
+👉 0 + 500 – 100 = 400
+
+✅ Ans: B
+
+⸻
+
+🔥 Q31 
+
+Sum = 90, Difference = 30
+Find: product of the two numbers
+
+A) 1800
+B) 1200
+C) 1500
+D) 2000
+
+👉 Numbers = 60 and 30
+👉 Product = 1800
+
+✅ Ans: A
+
+⸻
+
+🔥 Q32 
+
+Total 80 balls
+30 red, 20 blue
+10 balls removed (not red)
+
+How many green left?
+
+A) 20
+B) 30
+C) 10
+D) Cannot be determined
+
+👉 Removed balls could be blue or green
+
+✅ Ans: D (Tricky!)
+
+⸻
+
+🔥 Q33 
+
+6 × ? = 144 ÷ 4
+Find: ?²
+
+A) 36
+B) 25
+C) 49
+D) 16
+
+👉 ? = 6
+👉 ?² = 36
+
+✅ Ans: A
+
+⸻
+
+🔥 Q34 
+
+1/3 of number = 30
+Find: 1/5 of that number
+
+A) 18
+B) 20
+C) 15
+D) 25
+
+👉 Number = 90
+👉 1/5 = 18
+
+✅ Ans: A
+
+⸻
+
+🔥 Q35 
+
+Number + 40 = 100
+Find: (number × 2) – 20
+
+A) 100
+B) 80
+C) 120
+D) 90
+
+👉 Number = 60
+👉 120 – 20 = 100
+
+✅ Ans: A

@@ -8,9 +8,16 @@ import (
 	"question_input_smartsystem/internal/model"
 )
 
+// reFirstOpt matches the first line that starts an option block (a. / a) / A. / A))
+// anchored to start-of-line so "a)" inside question text is not a false positive.
+var reFirstOptMCQ = regexp.MustCompile(`(?im)^\s*[a-d][\.\)]`)
+
+// reOptionMCQ extracts a single option line anchored to start-of-line.
+var reOptionMCQ = regexp.MustCompile(`(?im)^\s*([a-d])[\.\)]\s+(.+)`)
+
 func ParseMCQs(text string) []model.MCQ {
 
-	// Split by Q1, Q2... (more reliable than old regex)
+	// Split by Q1, Q2... anchored to start of line
 	qRegex := regexp.MustCompile(`(?m)^Q\d+\.`)
 	indices := qRegex.FindAllStringIndex(text, -1)
 
@@ -44,15 +51,12 @@ func ParseMCQs(text string) []model.MCQ {
 		qNum, _ := strconv.Atoi(numMatch[1])
 
 		// 🧠 STEP 2: Extract Question Text (MULTILINE SAFE)
-		optIndex := strings.Index(strings.ToLower(block), "\na)")
-		if optIndex == -1 {
-			optIndex = strings.Index(strings.ToLower(block), "a)")
-		}
-		if optIndex == -1 {
-			optIndex = strings.Index(strings.ToLower(block), "\na.")
-		}
-		if optIndex == -1 {
-			optIndex = strings.Index(strings.ToLower(block), "a.")
+		// Use a line-anchored regex to find the first option line — avoids
+		// false positives when the question body itself contains "a)" or "a.".
+		loc := reFirstOptMCQ.FindStringIndex(block)
+		optIndex := -1
+		if loc != nil {
+			optIndex = loc[0]
 		}
 
 		questionText := ""
@@ -60,56 +64,44 @@ func ParseMCQs(text string) []model.MCQ {
 			questionText = strings.TrimSpace(block[:optIndex])
 		}
 
-		// remove Q number
+		// remove Q number prefix
 		questionText = numRegex.ReplaceAllString(questionText, "")
 		questionText = strings.ReplaceAll(questionText, "⸻", "")
 		questionText = strings.TrimSpace(questionText)
 
-		// 🧩 STEP 3: Extract Options (supports A. and a))
-		options := make(map[string]string)
-
-		optRegex := regexp.MustCompile(`(?i)([a-d])[\.\)]\s*(.+)`)
-
-		// ✅ FIX: remove answer before extracting options
+		// 🧩 STEP 3: Extract Options
+		// Remove answer line first so the answer letter is not captured as an option.
 		cleanBlock := regexp.MustCompile(`(?i)(?:✅\s*)?answer:.*`).ReplaceAllString(block, "")
 
-		optMatches := optRegex.FindAllStringSubmatch(cleanBlock, -1)
+		// Anchored to start-of-line — prevents mid-sentence letter matches.
+		optMatches := reOptionMCQ.FindAllStringSubmatch(cleanBlock, -1)
 
+		options := make(map[string]string)
 		for _, opt := range optMatches {
 			key := strings.ToUpper(opt[1])
 			value := strings.TrimSpace(opt[2])
 
-			// take only first line
+			// take only the first line of the value
 			value = strings.Split(value, "\n")[0]
+			value = strings.TrimSpace(value)
 
 			options[key] = value
 		}
 
 		// 🎯 STEP 4: Extract Answer (UNIVERSAL)
-
-		// ❌ old:
-		// ansRegex := regexp.MustCompile(`(?i)answer:\s*([a-dA-D])`)
-		// ansMatch := ansRegex.FindStringSubmatch(block)
-
-		// answer := ""
-		// if len(ansMatch) > 1 {
-		// 	answer = strings.ToUpper(ansMatch[1])
-		// }
-
-		// ✅ FIXED:
-		ansRegex := regexp.MustCompile(`(?i)(?:✅\s*)?answer:\s*([a-dA-D])`)
+		// Matches: ✅ Answer: B, Answer: B, ✅ Ans: B, Ans: B
+		// Also handles "Ans: B) 39" where letter is followed by ) and text.
+		ansRegex := regexp.MustCompile(`(?i)(?:✅\s*)?(?:answer|ans):\s*([a-dA-D])`)
 		ansMatches := ansRegex.FindAllStringSubmatch(block, -1)
 
 		answer := ""
 		if len(ansMatches) > 0 {
-			// take LAST match (important)
+			// take LAST match to avoid spurious early matches
 			answer = strings.ToUpper(ansMatches[len(ansMatches)-1][1])
 		}
 
-		// 🧪 DEBUG (important)
-		// 🧠 FALLBACK: try to detect answer from option text
+		// 🧠 FALLBACK: match answer text against option values
 		if answer == "" {
-
 			ansTextRegex := regexp.MustCompile(`(?i)(?:answer|ans).*?:?\s*([^\n]+)`)
 			textMatch := ansTextRegex.FindStringSubmatch(block)
 
@@ -124,8 +116,13 @@ func ParseMCQs(text string) []model.MCQ {
 				}
 			}
 		}
-		// ✅ Validation (relaxed)
-		if len(options) >= 4 {
+
+		// ✅ Validation: require all 4 options (A-D) explicitly
+		_, hasA := options["A"]
+		_, hasB := options["B"]
+		_, hasC := options["C"]
+		_, hasD := options["D"]
+		if hasA && hasB && hasC && hasD {
 			results = append(results, model.MCQ{
 				QuestionNumber: qNum,
 				Title:          "",

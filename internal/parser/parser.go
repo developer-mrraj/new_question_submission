@@ -12,9 +12,15 @@ type ParsedQuestion struct {
 	Answer  string            `json:"answer"`
 }
 
-var reQHeader = regexp.MustCompile(`(?i)^\s*(?:q\s*)?\d+\s*[\.\)]\s*`)
-var reOption = regexp.MustCompile(`(?i)^\s*([a-d])[\)\.\-]\s+(.+)`)
-var reAnswer = regexp.MustCompile(`(?i)(?:answer|ans|correct).*?([a-d])`)
+// reQHeader strips the prefix "Q1.", "1)", "🔥 Q19", etc. from the first line.
+var reQHeader = regexp.MustCompile(`(?i)^\s*(?:🔥\s*)?(?:q\s*\d+(?:\s*[\.\)])?|\d+\s*[\.\)])\s*`)
+
+// reOption supports: A) A. A- and even "A - " (space-dash-space) formats.
+var reOption = regexp.MustCompile(`(?i)^\s*([a-d])(?:[\)\.]|\s*-)\s*(.+)`)
+
+// reAnswer requires the keyword 'answer' or 'ans', followed by ANY chars up to a colon,
+// then the option character. This handles: "Answer: c)" as well as "Answer (including pets): c)".
+var reAnswer = regexp.MustCompile(`(?i)(?:answer|ans).*?:\s*([a-d])`)
 
 func Parse(num int, raw string) ParsedQuestion {
 	lines := strings.Split(raw, "\n")
@@ -51,11 +57,6 @@ func Parse(num int, raw string) ParsedQuestion {
 		if m := reOption.FindStringSubmatch(t); m != nil {
 			opt := strings.ToUpper(m[1])
 			val := strings.TrimSpace(m[2])
-
-			// ❌ skip garbage options
-			if len(val) < 2 {
-				continue
-			}
 
 			pq.Options[opt] = val
 			optionsStarted = true

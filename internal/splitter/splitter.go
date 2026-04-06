@@ -11,12 +11,14 @@ type QuestionBlock struct {
 }
 
 // ✅ Detect ALL formats:
+// ✅ Detect ALL formats:
 // 1.
 // Q1.
 // q1.
 // 1)
 // Q1)
-var reQStart = regexp.MustCompile(`(?i)^\s*(?:q\s*)?\d+\s*[\.\)]`)
+// 🔥 Q19
+var reQStart = regexp.MustCompile(`(?i)^\s*(?:🔥\s*)?(?:q\s*\d+(?:\s*[\.\)])?|\d+\s*[\.\)])`)
 
 // REMOVE level / garbage
 var reJunk = regexp.MustCompile(`(?i)^\s*(level|📘|⸻|---|___)`)
