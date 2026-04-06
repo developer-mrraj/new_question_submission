@@ -1,0 +1,17 @@
+# credentials.json
+credentials.json
+
+# Binary output
+question_parser_server
+question_parser_server.exe
+
+# Environment files
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# Test cache
+testcache/

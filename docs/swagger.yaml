@@ -1,0 +1,178 @@
+basePath: /
+definitions:
+  handler.ErrorResponse:
+    properties:
+      error:
+        example: Field 'text' is required
+        type: string
+    type: object
+  handler.InputQuestion:
+    properties:
+      answer:
+        type: string
+      number:
+        type: integer
+      options:
+        additionalProperties:
+          type: string
+        type: object
+      text:
+        type: string
+    type: object
+  handler.ParseRequest:
+    properties:
+      difficulty:
+        example: Easy
+        type: string
+      module:
+        example: Mixed
+        type: string
+      questions:
+        items:
+          $ref: '#/definitions/handler.InputQuestion'
+        type: array
+    type: object
+  handler.ParsedFlatQuestion:
+    properties:
+      difficulty:
+        type: string
+      module:
+        type: string
+      option1_is_correct:
+        type: boolean
+      option1_text:
+        type: string
+      option2_is_correct:
+        type: boolean
+      option2_text:
+        type: string
+      option3_is_correct:
+        type: boolean
+      option3_text:
+        type: string
+      option4_is_correct:
+        type: boolean
+      option4_text:
+        type: string
+      text:
+        type: string
+    type: object
+  model.MCQ:
+    properties:
+      correct_answer:
+        type: string
+      options:
+        additionalProperties:
+          type: string
+        type: object
+      question:
+        type: string
+      question_number:
+        type: integer
+      title:
+        type: string
+    type: object
+  parser.ParsedQuestion:
+    properties:
+      answer:
+        type: string
+      number:
+        type: integer
+      options:
+        additionalProperties:
+          type: string
+        type: object
+      text:
+        type: string
+    type: object
+info:
+  contact:
+    name: SmartSystem Support
+  description: Stateless API that parses raw MCQ question text and exports to Google
+    Sheets.
+  title: Question Parser & Google Sheets Exporter API
+  version: "1.0"
+paths:
+  /convert:
+    post:
+      consumes:
+      - text/plain
+      description: Parses raw text containing MCQs and converts it into a structured
+        JSON array
+      parameters:
+      - description: Raw text containing questions
+        in: body
+        name: text
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.MCQ'
+            type: array
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+      summary: Convert raw text to JSON MCQs
+      tags:
+      - mcq
+  /export:
+    get:
+      description: Takes the recently parsed data from memory and returns an Excel
+        file (.xlsx) download.
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: questions.xlsx
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Export parsed questions to Excel
+      tags:
+      - Export
+  /parse:
+    post:
+      consumes:
+      - application/json
+      description: Accepts JSON structured questions, validates them, and flattens
+        options A-D with correctness flags.
+      parameters:
+      - description: Structured questions + metadata
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.ParseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.ParsedFlatQuestion'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Parse structured MCQ JSON into flattened format
+      tags:
+      - Parser
+schemes:
+- http
+swagger: "2.0"
