@@ -1,5 +1,35 @@
 basePath: /
 definitions:
+  handler.DQInputQuestion:
+    properties:
+      answer:
+        type: string
+      explanation:
+        type: string
+      number:
+        type: integer
+      options:
+        additionalProperties:
+          type: string
+        type: object
+      text:
+        type: string
+      title:
+        type: string
+    type: object
+  handler.DQParseRequest:
+    properties:
+      difficulty:
+        example: Easy
+        type: string
+      module:
+        example: Mixed
+        type: string
+      questions:
+        items:
+          $ref: '#/definitions/handler.DQInputQuestion'
+        type: array
+    type: object
   handler.ErrorResponse:
     properties:
       error:
@@ -31,6 +61,35 @@ definitions:
         items:
           $ref: '#/definitions/handler.InputQuestion'
         type: array
+    type: object
+  handler.ParsedFlatDQQuestion:
+    properties:
+      difficulty:
+        type: string
+      explanation:
+        type: string
+      module:
+        type: string
+      option1_is_correct:
+        type: boolean
+      option1_text:
+        type: string
+      option2_is_correct:
+        type: boolean
+      option2_text:
+        type: string
+      option3_is_correct:
+        type: boolean
+      option3_text:
+        type: string
+      option4_is_correct:
+        type: boolean
+      option4_text:
+        type: string
+      text:
+        type: string
+      title:
+        type: string
     type: object
   handler.ParsedFlatQuestion:
     properties:
@@ -69,6 +128,23 @@ definitions:
         type: string
       question_number:
         type: integer
+      title:
+        type: string
+    type: object
+  parser.ParsedDQQuestion:
+    properties:
+      answer:
+        type: string
+      explanation:
+        type: string
+      number:
+        type: integer
+      options:
+        additionalProperties:
+          type: string
+        type: object
+      text:
+        type: string
       title:
         type: string
     type: object
@@ -122,6 +198,35 @@ paths:
       summary: Convert raw text to JSON MCQs
       tags:
       - mcq
+  /convert/dq:
+    post:
+      consumes:
+      - text/plain
+      description: Paste raw question text containing Explanation lines. Returns questions
+        with text, explanation, options, and answer extracted.
+      parameters:
+      - description: Raw DQ question text
+        in: body
+        name: text
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/parser.ParsedDQQuestion'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Convert raw Decision & Quiz text into structured JSON (with Explanation)
+      tags:
+      - Decision & Quiz
   /export:
     get:
       description: Takes the recently parsed data from memory and returns an Excel
@@ -141,9 +246,31 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handler.ErrorResponse'
-      summary: Export parsed questions to Excel
+      summary: Export parsed MCQ questions to Excel
       tags:
       - Export
+  /export/dq:
+    get:
+      description: Takes the recently parsed Decision & Quiz data from memory and
+        returns an Excel file (.xlsx) with title and explanation columns.
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: dq_questions.xlsx
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Export parsed Decision & Quiz questions to Excel
+      tags:
+      - Decision & Quiz
   /parse:
     post:
       consumes:
@@ -173,6 +300,35 @@ paths:
       summary: Parse structured MCQ JSON into flattened format
       tags:
       - Parser
+  /parse/dq:
+    post:
+      consumes:
+      - application/json
+      description: Accepts JSON structured questions with title and explanation, validates
+        them, and flattens options A-D with correctness flags.
+      parameters:
+      - description: Structured DQ questions + metadata
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/handler.DQParseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handler.ParsedFlatDQQuestion'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Parse structured Decision & Quiz JSON into flattened format
+      tags:
+      - Decision & Quiz
 schemes:
 - http
 swagger: "2.0"

@@ -23,23 +23,28 @@ import (
 func main() {
 	mux := http.NewServeMux()
 
-	// API Routes
+	// ── MCQ (Other) routes ──────────────────────────────────────────────────
 	mux.HandleFunc("/convert", handler.ConvertHandler)
 	mux.HandleFunc("/parse", handler.ParseHandler)
 	mux.HandleFunc("/export", handler.ExportHandler)
 
-	// Health check
+	// ── Decision & Quiz routes ──────────────────────────────────────────────
+	mux.HandleFunc("/convert/dq", handler.ConvertDQHandler)
+	mux.HandleFunc("/parse/dq", handler.DQParseHandler)
+	mux.HandleFunc("/export/dq", handler.ExportDQHandler)
+
+	// ── Health check ───────────────────────────────────────────────────────
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte(`{"status":"ok"}`))
 	})
 
-	// Swagger UI at /swagger/
+	// ── Swagger UI ─────────────────────────────────────────────────────────
 	mux.HandleFunc("/swagger/", httpSwagger.Handler(
 		httpSwagger.URL("/swagger/doc.json"),
 	))
 
-	// CORS middleware
+	// ── CORS middleware ────────────────────────────────────────────────────
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
@@ -52,11 +57,15 @@ func main() {
 	// Render.com injects PORT env var; fallback to 6060 for local dev
 	port := ":" + getEnv("PORT", "6060")
 	log.Printf("🚀 Question Parser API running on http://localhost%s", port)
-	log.Printf("   POST /convert  — Convert text to JSON")
-	log.Printf("   POST /parse    — Parse and validateJSON")
-	log.Printf("   POST /export   — Export to Google Sheets")
-	log.Printf("   GET  /health   — Health check")
-	log.Printf("   GET  /swagger/ — Swagger UI")
+	log.Printf("   GET  /           — Home page (select MCQ or Decision & Quiz)")
+	log.Printf("   POST /convert    — Convert raw text → JSON (MCQ)")
+	log.Printf("   POST /parse      — Parse structured JSON (MCQ)")
+	log.Printf("   GET  /export     — Export MCQ to Excel")
+	log.Printf("   POST /convert/dq — Convert raw text → JSON (Decision & Quiz)")
+	log.Printf("   POST /parse/dq   — Parse structured JSON (Decision & Quiz)")
+	log.Printf("   GET  /export/dq  — Export Decision & Quiz to Excel")
+	log.Printf("   GET  /health     — Health check")
+	log.Printf("   GET  /swagger/   — Swagger UI")
 
 	if err := http.ListenAndServe(port, h); err != nil {
 		log.Fatalf("Server failed to start: %v", err)

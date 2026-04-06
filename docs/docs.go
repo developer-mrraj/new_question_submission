@@ -60,6 +60,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/convert/dq": {
+            "post": {
+                "description": "Paste raw question text containing Explanation lines. Returns questions with text, explanation, options, and answer extracted.",
+                "consumes": [
+                    "text/plain"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Decision \u0026 Quiz"
+                ],
+                "summary": "Convert raw Decision \u0026 Quiz text into structured JSON (with Explanation)",
+                "parameters": [
+                    {
+                        "description": "Raw DQ question text",
+                        "name": "text",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/parser.ParsedDQQuestion"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/export": {
             "get": {
                 "description": "Takes the recently parsed data from memory and returns an Excel file (.xlsx) download.",
@@ -69,10 +112,42 @@ const docTemplate = `{
                 "tags": [
                     "Export"
                 ],
-                "summary": "Export parsed questions to Excel",
+                "summary": "Export parsed MCQ questions to Excel",
                 "responses": {
                     "200": {
                         "description": "questions.xlsx",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/export/dq": {
+            "get": {
+                "description": "Takes the recently parsed Decision \u0026 Quiz data from memory and returns an Excel file (.xlsx) with title and explanation columns.",
+                "produces": [
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                ],
+                "tags": [
+                    "Decision \u0026 Quiz"
+                ],
+                "summary": "Export parsed Decision \u0026 Quiz questions to Excel",
+                "responses": {
+                    "200": {
+                        "description": "dq_questions.xlsx",
                         "schema": {
                             "type": "string"
                         }
@@ -134,9 +209,97 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/parse/dq": {
+            "post": {
+                "description": "Accepts JSON structured questions with title and explanation, validates them, and flattens options A-D with correctness flags.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Decision \u0026 Quiz"
+                ],
+                "summary": "Parse structured Decision \u0026 Quiz JSON into flattened format",
+                "parameters": [
+                    {
+                        "description": "Structured DQ questions + metadata",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.DQParseRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/handler.ParsedFlatDQQuestion"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "handler.DQInputQuestion": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "explanation": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "text": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.DQParseRequest": {
+            "type": "object",
+            "properties": {
+                "difficulty": {
+                    "type": "string",
+                    "example": "Easy"
+                },
+                "module": {
+                    "type": "string",
+                    "example": "Mixed"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handler.DQInputQuestion"
+                    }
+                }
+            }
+        },
         "handler.ErrorResponse": {
             "type": "object",
             "properties": {
@@ -182,6 +345,50 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/handler.InputQuestion"
                     }
+                }
+            }
+        },
+        "handler.ParsedFlatDQQuestion": {
+            "type": "object",
+            "properties": {
+                "difficulty": {
+                    "type": "string"
+                },
+                "explanation": {
+                    "type": "string"
+                },
+                "module": {
+                    "type": "string"
+                },
+                "option1_is_correct": {
+                    "type": "boolean"
+                },
+                "option1_text": {
+                    "type": "string"
+                },
+                "option2_is_correct": {
+                    "type": "boolean"
+                },
+                "option2_text": {
+                    "type": "string"
+                },
+                "option3_is_correct": {
+                    "type": "boolean"
+                },
+                "option3_text": {
+                    "type": "string"
+                },
+                "option4_is_correct": {
+                    "type": "boolean"
+                },
+                "option4_text": {
+                    "type": "string"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
                 }
             }
         },
@@ -240,6 +447,32 @@ const docTemplate = `{
                 },
                 "question_number": {
                     "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "parser.ParsedDQQuestion": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "string"
+                },
+                "explanation": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "integer"
+                },
+                "options": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "text": {
+                    "type": "string"
                 },
                 "title": {
                     "type": "string"
