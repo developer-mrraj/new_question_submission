@@ -11,6 +11,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/rs/cors"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -48,7 +49,8 @@ func main() {
 
 	h := c.Handler(mux)
 
-	port := ":6060"
+	// Render.com injects PORT env var; fallback to 6060 for local dev
+	port := ":" + getEnv("PORT", "6060")
 	log.Printf("🚀 Question Parser API running on http://localhost%s", port)
 	log.Printf("   POST /convert  — Convert text to JSON")
 	log.Printf("   POST /parse    — Parse and validateJSON")
@@ -59,4 +61,11 @@ func main() {
 	if err := http.ListenAndServe(port, h); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
+}
+
+func getEnv(key, fallback string) string {
+	if val := os.Getenv(key); val != "" {
+		return val
+	}
+	return fallback
 }

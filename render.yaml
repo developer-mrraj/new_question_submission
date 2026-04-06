@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mcq-parser-api
+    runtime: go
+    plan: free
+    buildCommand: go build -o server ./cmd/server/main.go
+    startCommand: ./server
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
